@@ -27,7 +27,7 @@ path <- "/home/emmanuelnk/Desktop/MMED/TUTORIALS/"
 # Set the working directory to the specified path
 setwd(path)
 
-# Loading the data, obtained at  http://iidda.mcmaster.ca
+# Loading the data
 load("dataLondon.Rdata")
 
 # Confirm the dataset is loaded by listing the objects in the environment
@@ -35,9 +35,6 @@ ls()
 
 # Inspect the first 5 rows of the London dataset
 head(London, 5)
-# A short comment : The column meas.inc represents the incidence rate of measles per 100,000 population.
-#It's calculated by dividing the number of measles cases by the total population and then multiplying by 100,000.
-#For example, in 1946, the incidence rate of measles was approximately 297.27 per 100,000 population.
 
 # Shows last 5 rows
 tail(London, 5) 
@@ -51,14 +48,28 @@ dim(London)
 # Rows of our dataset
 nrow(London)
 
-#Columns of our dataset
+# Columns of our dataset
 ncol(London)
 
 # Types (classes) of variables in our dataset
 class(London$measles) # Nice: integer
 
+# Let's inspect the biths dynamics
+births_london <- ggplot(London, aes(x = year, y = births)) +
+  geom_point(color = "violet") +
+  geom_line(color = "violet") +
+  labs(title = "Births in London",
+       x = "Year",
+       y = "Births") +
+  theme_minimal()
+print(births_london)
+# Save the plot to a PDF file
+ggsave(filename = "births_london_plot.pdf", plot = births_london, device = "pdf", path = path)
 
-# Let's display the measles incidence plot
+# Mean of the column births
+mean(London$births)
+
+# Let's display the measles dynamics
 measles_london <- ggplot(London, aes(x = year, y = measles)) +
   geom_point(color = "blue") +
   geom_line(color = "blue") +
@@ -67,38 +78,26 @@ measles_london <- ggplot(London, aes(x = year, y = measles)) +
        y = "Measles cases") +
   theme_minimal()
 print(measles_london)
-
 # Save the plot to a PDF file
 ggsave(filename = "measles_london_plot.pdf", plot = measles_london, device = "pdf", path = path)
 
-#COMMENT ABOUT THE OBTAINED
-#This figure shows the number of measles cases in London from 1946 to 1990. 
-#The x-axis represents the years, and the y-axis represents the number of cases. 
-#This line graph depicts the trends and fluctuations in measles cases over time.
-#From the figure, we can observe several important trends. 
-#Initially, there is a high number of measles cases in the late 1940s, which remains relatively high throughout
-#the 1950s. This indicates that measles was a significant public health issue during this time.
-#Moving into the 1960s and 1970s, the graph shows fluctuations with peaks and troughs, suggesting 
-#periodic outbreaks followed by declines.
-#Notably, from the late 1970s onwards, there is a significant decrease in the number of measles cases, 
-#which continues into the 1980s. This decline is likely due to public health interventions,
-#such as the introduction and widespread use of measles vaccination programs. 
-#By the late 1980s and early 1990s, the number of cases decreases significantly, 
-#demonstrating the effectiveness of vaccination efforts in controlling and reducing the occurrence
-#of measles in London.
+# Mean of the column measles
+mean(London$measles)
+
 
 # Let's display the measles incidence plot
 measles_plot <- ggplot(London, aes(x = year, y = meas.inc)) +
-  geom_point(color = "red") +
-  geom_line(color = "red") +
+  geom_point(color = "magenta") +
+  geom_line(color = "magenta") +
   labs(title = "Measles in London: Annual incidence",
        x = "Year",
        y = "Annual incidence (cases per 100,000 population)") +
-  theme_minimal()
-print(measles_plot)
+  theme_minimal() +
+  geom_vline(xintercept = 1967, color = "blue", linetype = "dashed", size = 1) # Add vertical line
 
+print(measles_plot)
 # Save the plot to a PDF file
-ggsave(filename = "measles_incidence_plot.pdf", plot = measles_plot, device = "pdf", path = path)
+ggsave(filename = "measles_incidence_vac_plot.pdf", plot = measles_plot, device = "pdf", path = path)
 
 
 #**********************************************************
